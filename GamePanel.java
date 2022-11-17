@@ -4,27 +4,28 @@ import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.*;
 
-public class Board extends JPanel implements ActionListener, KeyListener {
+public class GamePanel extends JPanel implements KeyListener, Runnable {
 
-    // controls the delay between each tick in ms
-    private final int DELAY = 25;
     // controls the size of the board
     public static final int TILE_SIZE = 50;
-    public static final int ROWS = 12;
-    public static final int COLUMNS = 18;
+    public static final int ROWS = 20;
+    public static final int COLUMNS = 20;
     // controls how many coins appear on the board
     public static final int NUM_COINS = 5;
     // suppress serialization warning
     private static final long serialVersionUID = 490905409104883233L;
-    
-    // keep a reference to the timer object that triggers actionPerformed() in
-    // case we need access to it in another method
-    private Timer timer;
+
+    int FPS = 60;
+
+    int UPDATE_FREQUENCY = 120;
+
     // objects that appear on the game board
     private Player player;
     private ArrayList<Coin> coins;
+    Thread gameThread;
 
-    public Board() {
+    KeyHandler keyHandler = new KeyHandler();
+    public GamePanel() {
         // set the game board size
         setPreferredSize(new Dimension(TILE_SIZE * COLUMNS, TILE_SIZE * ROWS));
         // set the game board background color
@@ -34,26 +35,34 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         player = new Player();
         coins = populateCoins();
 
-        // this timer will call the actionPerformed() method every DELAY ms
-        timer = new Timer(DELAY, this);
-        timer.start();
+        this.setDoubleBuffered(true);
+        this.addKeyListener(keyHandler);
+        this.setFocusable(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // this method is called by the timer every DELAY ms.
-        // use this space to update the state of your game or animation
-        // before the graphics are redrawn.
-
+    public void update(long dt) {
         // prevent the player from disappearing off the board
         player.tick();
 
         // give the player points for collecting coins
         collectCoins();
+    }
 
-        // calling repaint() will trigger paintComponent() to run again,
-        // which will refresh/redraw the graphics.
-        repaint();
+    @Override
+    public void run() {
+        long previousUpdateTime = System.currentTimeMillis();
+        long previousRenderTime = System.currentTimeMillis();
+        long updateInterval = 1000/UPDATE_FREQUENCY;
+        long renderInterval = 1000/FPS;
+        long updateDeltaTime = 0;
+        long renderDeltaTime = 0;
+        while (gameThread!=null) {
+            long currentTime = System.currentTimeMillis();
+            if((currentTime - previousUpdateTime) >= updateInterval) {
+                update(currentTime - previousUpdateTime);
+            }
+            repaint();
+        }
     }
 
     @Override
@@ -74,6 +83,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
         // this smooths out animations on some systems
         Toolkit.getDefaultToolkit().sync();
+        g.dispose();
     }
 
     @Override
@@ -174,4 +184,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
         coins.removeAll(collectedCoins);
     }
 
+    public void startGameThread() {
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
 }

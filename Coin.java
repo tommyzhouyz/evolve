@@ -38,8 +38,8 @@ public class Coin {
         // position by multiplying by the tile size.
         g.drawImage(
             image, 
-            pos.x * Board.TILE_SIZE, 
-            pos.y * Board.TILE_SIZE, 
+            pos.x * GamePanel.TILE_SIZE,
+            pos.y * GamePanel.TILE_SIZE,
             observer
         );
     }

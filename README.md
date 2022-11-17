@@ -14,7 +14,7 @@ Watch it here: COMING SOON
 - Change how many points you get per coin.
 - Make instance or class variables to control hardcoded values like the ones just mentioned.
 - Use WASD instead of arrows for movement.
-- Change the dimensions of the game board.
+- Change the dimensions of the game gamePanel.
 - Make a new coin appear whenever the player picks one up.
 - Change the tile size.
   - Remember to update your image files, or scale the images.
@@ -36,7 +36,7 @@ Watch it here: COMING SOON
 - Keep track of high scores.
   - In a single play session.
   - Or across all sessions by reading/writing to a file.
-- Allow the player to wrap around the edges of the board.
+- Allow the player to wrap around the edges of the gamePanel.
 
 ## ![Black Diamond](images/black-diamond.png) Advanced
 
@@ -59,7 +59,7 @@ Watch it here: COMING SOON
   - Can be as simple as changing some colors in the game.
   - Or maybe you've got health potions to restore player health.
 - Add more scoreboard/HUD elements.
-  - Maybe move this off of the game board itself, to some designated area on the canvas. I recommend still using just the single JPanel if you want to do this.
+  - Maybe move this off of the game gamePanel itself, to some designated area on the canvas. I recommend still using just the single JPanel if you want to do this.
 - Eliminate the grid concept altogether and use pixel positions instead.
 
 ## ![Double Black Diamond](images/double-black-diamond.png) Expert
